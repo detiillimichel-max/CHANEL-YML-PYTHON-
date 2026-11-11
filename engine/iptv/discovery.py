@@ -9,7 +9,7 @@ def discover_playlists(max_repositories=2, max_playlists=5):
     token = os.getenv("GITHUB_TOKEN")
     if token:
         headers["Authorization"] = f"Bearer {token}"
-    query = os.getenv("IPTV_GITHUB_QUERY", "iptv playlist m3u")
+    query = (os.getenv("IPTV_GITHUB_QUERY") or "iptv playlist m3u").strip()
     response = requests.get(f"{API}/search/repositories",
         params={"q": query, "sort": "updated", "per_page": min(max(max_repositories, 1), 10)},
         headers=headers, timeout=(5, 15))
