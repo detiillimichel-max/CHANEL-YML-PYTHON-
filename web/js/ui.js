@@ -1,4 +1,5 @@
 import {getFavorites,toggleFavorite} from "./storage.js";
+import {isHttpMediaUrl} from "./player.js";
 export function renderCards(container,records,type,handlers){
   container.replaceChildren();
   if(!records.length){const p=document.createElement("p");p.className="notice";p.textContent="Nenhum registro para os filtros atuais.";container.append(p);return;}
@@ -17,9 +18,12 @@ export function renderCards(container,records,type,handlers){
     fav.addEventListener("click",()=>{fav.textContent=toggleFavorite(item.id)?"★ Salvo":"☆ Salvar";});
     actions.append(detail,fav);
     if(type==="iptv"){
-      const play=document.createElement("button");play.className="primary";play.textContent="Reproduzir";
-      play.disabled=!item.stream_url||item.availability!=="accessible";
-      play.addEventListener("click",()=>handlers.play(item));actions.append(play);
+      if(isHttpMediaUrl(item.stream_url)){
+        const web=document.createElement("button");web.className="primary";web.textContent="Player web";
+        web.addEventListener("click",()=>handlers.play(item));actions.append(web);
+        const vlc=document.createElement("button");vlc.className="vlc-button";vlc.textContent="Abrir no VLC";
+        vlc.addEventListener("click",()=>handlers.openVlc(item));actions.append(vlc);
+      }
     }else{
       const open=document.createElement("button");open.className="primary";open.textContent="Abrir Drive";
       open.addEventListener("click",()=>handlers.open(item));actions.append(open);

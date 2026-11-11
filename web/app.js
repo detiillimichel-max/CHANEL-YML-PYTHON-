@@ -2,7 +2,7 @@ import {loadCatalogs} from "./js/catalog-loader.js";
 import {getIptvRecords} from "./js/iptv.js";
 import {getDriveRecords} from "./js/drive.js";
 import {renderCards,showDetails} from "./js/ui.js";
-import {playInBrowser} from "./js/player.js";
+import {playInBrowser,openInVlc,stopWebPlayer} from "./js/player.js";
 const $=id=>document.getElementById(id);
 const state={active:"iptv",catalogs:{iptv:null,drive:null},errors:{}};
 const grid=$("content-grid"),notice=$("notice"),video=$("media-player");
@@ -17,6 +17,7 @@ function render(){
   renderCards(grid,records(),state.active,{
     details:(item,type)=>showDetails($("details-dialog"),$("details-content"),item,type),
     play:async item=>{$("player-panel").hidden=false;$("player-title").textContent=item.name||"Canal IPTV";await playInBrowser(item,video,$("player-message"));$("player-panel").scrollIntoView({behavior:"smooth"});},
+    openVlc:item=>openInVlc(item.stream_url,$("player-message")),
     open:item=>{if(item.url)window.open(item.url,"_blank","noopener,noreferrer");}
   });
 }
@@ -33,5 +34,5 @@ $("search-input").addEventListener("input",render);
 $("clear-search").addEventListener("click",()=>{$("search-input").value="";render();});
 $("refresh-button").addEventListener("click",refresh);
 $("dialog-close").addEventListener("click",()=>$("details-dialog").close());
-$("close-player").addEventListener("click",()=>{video.pause();video.removeAttribute("src");video.load();$("player-panel").hidden=true;});
+$("close-player").addEventListener("click",()=>{stopWebPlayer(video);$("player-panel").hidden=true;});
 refresh();
