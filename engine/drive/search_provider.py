@@ -1,0 +1,3 @@
+from typing import Protocol
+class SearchProvider(Protocol):
+    def search(self, query: str, limit: int) -> list[dict]: ...
