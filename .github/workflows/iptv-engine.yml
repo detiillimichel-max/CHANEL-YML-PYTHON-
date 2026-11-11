@@ -1,5 +1,12 @@
 name: IPTV Engine
 on:
+  push:
+    branches: [develop]
+    paths:
+      - "engine/iptv/**"
+      - "engine/common/**"
+      - "requirements.txt"
+      - ".github/workflows/iptv-engine.yml"
   workflow_dispatch:
     inputs:
       max_repositories:

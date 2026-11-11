@@ -7,6 +7,8 @@ on:
       - "data/**"
       - "index.html"
       - ".github/workflows/pages.yml"
+  schedule:
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 permissions:
   contents: read
