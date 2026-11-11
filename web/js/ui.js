@@ -18,7 +18,7 @@ export function renderCards(container,records,type,handlers){
     actions.append(detail,fav);
     if(type==="iptv"){
       const play=document.createElement("button");play.className="primary";play.textContent="Reproduzir";
-      play.disabled=!item.stream_url||!["accessible","playlist_accessible"].includes(item.availability);
+      play.disabled=!item.stream_url||item.availability!=="accessible";
       play.addEventListener("click",()=>handlers.play(item));actions.append(play);
     }else{
       const open=document.createElement("button");open.className="primary";open.textContent="Abrir Drive";
@@ -29,7 +29,7 @@ export function renderCards(container,records,type,handlers){
 }
 export function showDetails(dialog,target,item,type){
   target.replaceChildren();
-  const keys=type==="iptv"?["name","group","source","playlist_url","stream_url","format","discovered_at","checked_at","availability","playback_status","validation"]:
+  const keys=type==="iptv"?["name","group","source","playlist_url","stream_url","format","discovered_at","checked_at","availability","playlist_availability","http_status","playback_status","validation"]:
     ["title","title_source","drive_id","url","resourcekey","mime_type","file_extension","source_query","discovered_at","availability","playback_status"];
   for(const key of keys){if(item[key]===undefined||item[key]===null||item[key]==="")continue;
     const row=document.createElement("div");row.className="detail-row";const label=document.createElement("small");label.textContent=key;
