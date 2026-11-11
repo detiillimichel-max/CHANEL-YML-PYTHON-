@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="Biblioteca IPTV e Google Drive com catálogos independentes.">
+  <title>CHANEL — Biblioteca</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./index.html"><span class="brand-mark">C</span><span>CHANEL<span class="muted"> / MEDIA</span></span></a>
+    <span class="connection" id="connection-status">Carregando catálogos…</span>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">BIBLIOTECA DE CONTEÚDO</p>
+      <h1>Descubra. Organize. <span>Assista.</span></h1>
+      <p class="subhead">Dois acervos independentes, uma única biblioteca.</p>
+      <label class="searchbox"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Pesquisar canais e arquivos…" autocomplete="off"><button id="clear-search" type="button" aria-label="Limpar pesquisa">×</button></label>
+    </section>
+    <nav class="tabs" aria-label="Bibliotecas">
+      <button class="tab active" data-library="iptv" type="button">◉ IPTV <span id="iptv-count">0</span></button>
+      <button class="tab" data-library="drive" type="button">▤ Google Drive <span id="drive-count">0</span></button>
+    </nav>
+    <section class="toolbar">
+      <div><h2 id="section-title">Canais IPTV</h2><p id="section-description">Playlists e canais encontrados em fontes públicas.</p></div>
+      <button id="refresh-button" class="ghost-button" type="button">Atualizar</button>
+    </section>
+    <div id="notice" class="notice" role="status">Carregando biblioteca…</div>
+    <section id="content-grid" class="content-grid" aria-live="polite"></section>
+    <section id="player-panel" class="player-panel" hidden>
+      <div class="player-heading"><div><p class="eyebrow">REPRODUÇÃO WEB</p><h2 id="player-title">Player</h2></div><button id="close-player" class="ghost-button" type="button">Fechar</button></div>
+      <video id="media-player" controls playsinline preload="none"></video>
+      <p id="player-message" class="player-message">O navegador pode não suportar este formato. LibVLC exige um host Android nativo.</p>
+    </section>
+    <footer><span>CHANEL-YML-PYTHON-</span><span>Catálogos independentes · Fontes públicas</span></footer>
+  </main>
+  <dialog id="details-dialog" class="details-dialog"><div class="dialog-head"><p class="eyebrow">DETALHES DO CONTEÚDO</p><button id="dialog-close" class="icon-button" type="button" aria-label="Fechar">×</button></div><div id="details-content"></div></dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
