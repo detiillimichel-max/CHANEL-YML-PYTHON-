@@ -1,0 +1,688 @@
+PROJETO CHANEL-YML-PYTHON — ESPECIFICAÇÃO MESTRA DE DESENVOLVIMENTO
+
+1. IDENTIDADE E OBJETIVO
+
+Vamos desenvolver o projeto exclusivamente no repositório:
+
+https://github.com/detiillimichel-max/CHANEL-YML-PYTHON-
+
+Aplicação publicada ou destinada à publicação em:
+
+https://detiillimichel-max.github.io/CHANEL-YML-PYTHON-/
+
+O objetivo é construir uma plataforma funcional de descoberta, organização, catalogação e reprodução de conteúdo compatível com playlists IPTV e arquivos públicos encontrados por pesquisa no Google Drive.
+
+O projeto terá DOIS MOTORES INDEPENDENTES:
+
+1. Motor IPTV: pesquisa, coleta, validação e catalogação de playlists M3U e M3U8.
+2. Motor Google Drive: pesquisa de URLs por consultas como "site:drive.google.com", identificação de arquivos, extração de metadados disponíveis e catalogação.
+
+Os dois motores serão executados por Python e GitHub Actions, configurados por arquivos YAML.
+
+A aplicação terá interface própria em HTML, CSS e JavaScript, com biblioteca, pesquisa, cartões, detalhes, seleção de conteúdo e reprodução compatível.
+
+A reprodução IPTV deverá utilizar VLC/LibVLC no aplicativo Android, respeitando as limitações técnicas de cada ambiente.
+
+O objetivo final é um aplicativo funcional, não uma demonstração, protótipo ou conjunto de scripts desconectados.
+
+---
+
+2. REGRAS OBRIGATÓRIAS DE DESENVOLVIMENTO
+
+Estas regras não podem ser ignoradas:
+
+- Trabalhar somente no repositório CHANEL-YML-PYTHON-.
+- Não modificar o repositório MEDEIA-ANDROID.
+- Não modificar outros repositórios.
+- Não criar projetos paralelos.
+- Não criar Pull Requests.
+- Não propor merge.
+- Não ficar pedindo autorização para commits comuns de implementação.
+- Não fazer commits manuais pelo usuário.
+- Não criar uma sequência de etapas que dependa de o usuário editar arquivos pelo celular.
+- Os arquivos de código serão criados e atualizados diretamente pelo GitHub.
+- Os commits de atualização de catálogos serão realizados pelos próprios workflows do GitHub Actions.
+- O desenvolvimento deve usar Python, YAML, HTML, CSS e JavaScript conforme a responsabilidade de cada componente.
+- Não criar testes automatizados ou uma etapa de testes no workflow. O usuário decidiu expressamente não utilizar testes.
+- Não inventar execução bem-sucedida. Só declarar uma função concluída depois de verificar a execução real e o resultado.
+- Não apresentar estruturas provisórias enormes e depois reduzi-las durante a implementação.
+- Primeiro definir uma arquitetura completa e coerente. Depois implementar essa arquitetura.
+- Não acrescentar motores, serviços, painéis, integrações ou funcionalidades que não estejam nesta especificação sem necessidade técnica justificada.
+
+O usuário trabalha principalmente pelo celular Android. Portanto, evitar tarefas que exijam computador, terminal local ou edição manual extensa.
+
+---
+
+3. ARQUITETURA GERAL
+
+A arquitetura obrigatória será:
+
+GitHub Actions + Python + YAML
+
+- Motor IPTV
+- Motor Google Drive
+- Atualização automática dos catálogos JSON
+
+Aplicação:
+
+- index.html
+- style.css
+- app.js
+- módulos JavaScript organizados
+- catálogos JSON consumidos por HTTPS
+
+Reprodução:
+
+- VLC/LibVLC no ambiente Android nativo compatível.
+- Player web de contingência para o ambiente de navegador, quando suportado.
+- O projeto deve distinguir claramente reprodução nativa e reprodução no navegador.
+
+Fluxo:
+
+GitHub Actions
+|
+|-- Python IPTV Engine
+|       |
+|       |-- Pesquisa M3U/M3U8
+|       |-- Normalização
+|       |-- Validação
+|       |-- Deduplicação
+|       |
+|       "-- data/iptv/catalog.json | "-- Python Drive Engine
+|
+|-- Pesquisa site:drive.google.com
+|-- Extração de URLs
+|-- Identificação de arquivos
+|-- Deduplicação
+|
+`-- data/drive/catalog.json
+
+Aplicação HTML/CSS/JS
+|
+|-- Biblioteca IPTV
+|-- Biblioteca Google Drive
+|-- Pesquisa
+|-- Categorias
+|-- Cartões
+|-- Detalhes
+|-- Favoritos locais
+|
+"-- Reprodução | |-- VLC/LibVLC Android "-- Player web compatível
+
+Os dois catálogos devem permanecer independentes.
+
+---
+
+4. MOTOR IPTV — PYTHON
+
+Criar um motor responsável por descobrir e catalogar playlists M3U e M3U8.
+
+4.1 Fontes de descoberta
+
+O motor poderá pesquisar:
+
+- Repositórios públicos do GitHub.
+- Arquivos públicos de playlists M3U/M3U8.
+- Fontes públicas de IPTV autorizadas.
+- Índices e diretórios públicos.
+- URLs públicas fornecidas por fontes documentadas.
+- Listas de canais de emissoras oficiais.
+
+Não inventar fontes ou URLs.
+
+Não considerar um resultado de pesquisa como playlist funcional sem validação.
+
+4.2 Funcionalidades
+
+O motor deve:
+
+1. Pesquisar URLs de playlists.
+2. Identificar extensão e formato.
+3. Extrair metadados disponíveis.
+4. Identificar canais e grupos quando houver dados M3U.
+5. Normalizar nomes e URLs.
+6. Eliminar duplicados.
+7. Identificar URLs HTTP e HTTPS.
+8. Verificar disponibilidade com requisições limitadas.
+9. Identificar HLS/M3U8 quando possível.
+10. Registrar data e origem da descoberta.
+11. Atualizar somente o catálogo IPTV.
+
+4.3 Validação
+
+Distinguir:
+
+- URL encontrada.
+- Playlist acessível.
+- Formato M3U válido.
+- Stream identificado.
+- Reprodução ainda não confirmada.
+
+Não baixar transmissões completas.
+
+Não contornar autenticação, DRM ou restrições de acesso.
+
+4.4 Catálogo
+
+Gerar:
+
+"data/iptv/catalog.json"
+
+Cada registro deve ter, quando disponível:
+
+- id
+- name
+- group
+- logo
+- source
+- playlist_url
+- stream_url
+- format
+- discovered_at
+- checked_at
+- availability
+- playback_status
+- source_type
+
+Não inventar campos com informações não verificadas.
+
+---
+
+5. MOTOR GOOGLE DRIVE — PYTHON
+
+Este motor deve pesquisar arquivos indexados pelo Google usando consultas direcionadas.
+
+5.1 Consultas
+
+Exemplos:
+
+"site:drive.google.com m3u"
+
+"site:drive.google.com m3u8"
+
+"site:drive.google.com "documentários""
+
+"site:drive.google.com "filmes""
+
+"site:drive.google.com "séries""
+
+"site:drive.google.com file"
+
+As consultas devem ser configuráveis.
+
+O motor deve suportar um provedor de pesquisa que permita resultados estruturados. Pode avaliar SearXNG, desde que a instância escolhida realmente responda à API JSON.
+
+Não presumir que qualquer instância pública funcione.
+
+5.2 Funcionalidades
+
+1. Executar consultas.
+2. Receber resultados estruturados.
+3. Extrair URLs do Google Drive.
+4. Identificar IDs dos arquivos.
+5. Extrair nomes e metadados disponíveis.
+6. Preservar resource keys quando fornecidas.
+7. Eliminar duplicados.
+8. Identificar arquivos sem título.
+9. Atribuir título genérico somente quando necessário, identificando-o como título padrão.
+10. Registrar a origem da descoberta.
+11. Atualizar somente o catálogo Drive.
+
+5.3 Estados de verificação
+
+Usar estados separados:
+
+- "discovered"
+- "url_parsed"
+- "not_checked"
+- "accessible"
+- "access_denied"
+- "unavailable"
+- "not_tested"
+
+Encontrar um arquivo no índice não significa que ele esteja público, acessível ou reproduzível.
+
+Não contornar permissões do Google Drive.
+
+Não baixar arquivos de vídeo completos durante a descoberta.
+
+5.4 Catálogo
+
+Gerar:
+
+"data/drive/catalog.json"
+
+Campos possíveis:
+
+- id
+- title
+- title_source
+- drive_id
+- url
+- resourcekey
+- mime_type
+- file_extension
+- source_query
+- discovered_at
+- availability
+- playback_status
+- source_type
+
+O catálogo deve ser cumulativo, deduplicado e independente do catálogo IPTV.
+
+---
+
+6. GITHUB ACTIONS + PYTHON + YAML
+
+Os dois motores precisam ter workflows independentes.
+
+Arquivos:
+
+".github/workflows/iptv-engine.yml"
+
+".github/workflows/drive-engine.yml"
+
+IPTV workflow
+
+Responsabilidades:
+
+- Execução manual.
+- Execução programada.
+- Inicialização do Python.
+- Execução do motor IPTV.
+- Geração do catálogo IPTV.
+- Commit automático apenas do catálogo IPTV quando houver alterações.
+
+Drive workflow
+
+Responsabilidades:
+
+- Execução manual.
+- Execução programada.
+- Inicialização do Python.
+- Execução do motor Drive.
+- Geração do catálogo Drive.
+- Commit automático apenas do catálogo Drive quando houver alterações.
+
+Regras
+
+- Cada workflow deve escrever somente no seu catálogo.
+- Não apagar dados anteriores.
+- Não sobrescrever o catálogo do outro motor.
+- Usar permissões mínimas necessárias.
+- Não expor tokens.
+- Usar GitHub Actions Secrets para credenciais privadas e Variables para configurações não secretas.
+- Não colocar chaves de API no JavaScript público.
+- Não criar etapas de testes automatizados.
+- Não criar workflows que modifiquem outros projetos.
+- Execuções manuais devem permitir limitar a quantidade de resultados.
+- A primeira execução real deve começar com limite pequeno e configurável.
+
+Os workflows devem produzir resultados persistentes e verificáveis.
+
+---
+
+7. INTERFACE WEB — HTML, CSS E JAVASCRIPT
+
+A interface será parte real da aplicação, não apenas uma página de documentação.
+
+Arquivos principais
+
+"index.html"
+
+"style.css"
+
+"app.js"
+
+Responsabilidades
+
+index.html
+
+- Estrutura principal.
+- Navegação.
+- Cabeçalho.
+- Área de pesquisa.
+- Biblioteca.
+- Categorias.
+- Área do player.
+- Modal de detalhes.
+- Controles de reprodução.
+
+style.css
+
+- Interface responsiva.
+- Prioridade para Android.
+- Tema escuro premium.
+- Cartões de conteúdo.
+- Grade de canais.
+- Lista de arquivos.
+- Player.
+- Estados de carregamento.
+- Mensagens de erro.
+- Navegação adaptada para telas pequenas.
+
+app.js
+
+- Inicialização.
+- Carregamento dos catálogos.
+- Pesquisa local.
+- Filtros.
+- Navegação.
+- Seleção de conteúdo.
+- Integração com player.
+- Tratamento de erros.
+
+Módulos JavaScript sugeridos
+
+"web/js/catalog-loader.js"
+
+- Buscar os dois catálogos JSON.
+
+"web/js/search.js"
+
+- Pesquisa e filtros.
+
+"web/js/iptv.js"
+
+- Biblioteca IPTV.
+
+"web/js/drive.js"
+
+- Biblioteca Google Drive.
+
+"web/js/player.js"
+
+- Orquestração da reprodução.
+
+"web/js/storage.js"
+
+- Favoritos e preferências locais.
+
+"web/js/ui.js"
+
+- Cartões, modais e atualização visual.
+
+Os módulos só devem ser criados se tiverem responsabilidades reais. Não criar arquivos vazios ou duplicar funções.
+
+Comportamento da interface
+
+A interface deve ter duas áreas claramente identificadas:
+
+1. IPTV
+2. Google Drive
+
+Cada uma deve consumir exclusivamente seu catálogo.
+
+O usuário deve conseguir:
+
+- Pesquisar canais e arquivos.
+- Navegar por categorias.
+- Visualizar cartões.
+- Abrir detalhes.
+- Identificar a origem do conteúdo.
+- Verificar o estado de disponibilidade.
+- Selecionar conteúdo.
+- Iniciar reprodução quando houver uma fonte compatível.
+- Receber mensagens claras quando a reprodução não for possível.
+- Manter favoritos localmente.
+
+Não exibir um botão de reproduzir como funcional quando a URL não for compatível ou não estiver disponível.
+
+---
+
+8. VLC / LIBVLC — REPRODUÇÃO ANDROID
+
+A reprodução de IPTV deve utilizar VLC/LibVLC no ambiente Android nativo.
+
+Responsabilidades
+
+- Receber a URL selecionada.
+- Identificar o tipo de mídia.
+- Abrir HLS/M3U8.
+- Reproduzir formatos compatíveis.
+- Exibir controles de reprodução.
+- Tratar erros.
+- Permitir parar e retomar.
+- Controlar volume e tela cheia quando suportado.
+- Encerrar corretamente a sessão do player.
+
+Orquestração
+
+Criar uma camada de reprodução que identifique:
+
+- HLS/M3U8.
+- HTTP/HTTPS.
+- Formato de mídia.
+- Fonte inacessível.
+- Timeout.
+- Codec não suportado.
+- Erros de rede.
+
+A seleção de VLC/LibVLC deve acontecer no aplicativo Android nativo.
+
+Limitação técnica obrigatória: uma página GitHub Pages executa HTML/CSS/JavaScript no navegador e não pode incorporar diretamente uma biblioteca nativa Android LibVLC. Se a interface web for publicada nesse endereço, ela poderá usar um player web compatível, enquanto a integração nativa LibVLC deverá ser feita em um aplicativo Android com Kotlin e dependência LibVLC.
+
+Não fingir que JavaScript no navegador está executando LibVLC.
+
+Não afirmar que o VLC reproduzirá toda URL. CORS, codecs, autenticação, formatos e disponibilidade podem impedir a reprodução.
+
+A arquitetura deve permitir que a interface e os catálogos sejam compartilhados, mantendo o adaptador de reprodução adequado para cada ambiente.
+
+---
+
+9. ESTRUTURA COMPLETA DE PASTAS
+
+Antes de implementar, inspecionar o repositório e definir a estrutura final completa.
+
+Estrutura de referência:
+
+CHANEL-YML-PYTHON-/
+│
+├── .github/
+│   └── workflows/
+│       ├── iptv-engine.yml
+│       └── drive-engine.yml
+│
+├── engine/
+│   ├── common/
+│   │   ├── http_client.py
+│   │   ├── url_normalizer.py
+│   │   ├── deduplicator.py
+│   │   └── catalog_writer.py
+│   │
+│   ├── iptv/
+│   │   ├── __init__.py
+│   │   ├── discovery.py
+│   │   ├── playlist_parser.py
+│   │   ├── validator.py
+│   │   ├── catalog_builder.py
+│   │   └── main.py
+│   │
+│   └── drive/
+│       ├── __init__.py
+│       ├── search_provider.py
+│       ├── searxng_provider.py
+│       ├── drive_url_parser.py
+│       ├── metadata_extractor.py
+│       ├── catalog_builder.py
+│       └── main.py
+│
+├── data/
+│   ├── iptv/
+│   │   └── catalog.json
+│   │
+│   └── drive/
+│       └── catalog.json
+│
+├── web/
+│   ├── index.html
+│   ├── style.css
+│   ├── app.js
+│   │
+│   ├── js/
+│   │   ├── catalog-loader.js
+│   │   ├── search.js
+│   │   ├── iptv.js
+│   │   ├── drive.js
+│   │   ├── player.js
+│   │   ├── storage.js
+│   │   └── ui.js
+│   │
+│   └── assets/
+│       ├── icons/
+│       └── images/
+│
+├── android/
+│   └── (somente se a implementação Android nativa for autorizada e tecnicamente definida neste repositório)
+│
+├── docs/
+│   ├── architecture.md
+│   ├── catalog-schema.md
+│   ├── iptv-engine.md
+│   ├── drive-engine.md
+│   └── playback.md
+│
+├── requirements.txt
+├── .gitignore
+└── README.md
+
+Esta estrutura é uma proposta arquitetural inicial. Antes de criar arquivos, verificar o que já existe e adaptar a estrutura sem duplicar funcionalidades.
+
+Não criar diretórios ou arquivos sem finalidade concreta.
+
+Não reduzir a arquitetura somente para parecer simples. A prioridade é funcionamento, manutenção e separação de responsabilidades.
+
+---
+
+10. INTEGRAÇÃO DOS CATÁLOGOS COM A INTERFACE
+
+A interface deve buscar os catálogos por URLs HTTPS.
+
+Exemplo conceitual:
+
+- "data/iptv/catalog.json"
+- "data/drive/catalog.json"
+
+Os arquivos precisam ser publicados de forma que o navegador possa acessá-los.
+
+O carregador JavaScript deve:
+
+1. Buscar os dois arquivos.
+2. Tratar falha de rede.
+3. Tratar JSON inválido.
+4. Não confundir catálogo vazio com falha de carregamento.
+5. Atualizar a interface quando os catálogos mudarem.
+6. Manter os dados dos motores separados.
+7. Não misturar registros IPTV com registros Drive.
+
+Se a interface estiver dentro de "web/", definir corretamente os caminhos relativos e a estratégia de publicação GitHub Pages.
+
+---
+
+11. ESTRATÉGIA DE IMPLEMENTAÇÃO
+
+Não começar criando dezenas de arquivos sem conferir o repositório.
+
+Ordem de execução:
+
+Fase 1 — Inspeção e arquitetura definitiva
+
+- Acessar o repositório.
+- Conferir todos os arquivos existentes.
+- Confirmar a branch de trabalho.
+- Verificar o estado do README.
+- Definir a estrutura final completa.
+- Registrar claramente as responsabilidades de cada arquivo.
+
+Fase 2 — Motor IPTV
+
+- Implementar o código Python.
+- Criar o workflow YAML.
+- Criar o catálogo IPTV.
+- Executar a primeira busca real com limite pequeno.
+- Confirmar que o JSON foi gerado e persistido pelo GitHub Actions.
+
+Fase 3 — Motor Google Drive
+
+- Implementar o provedor de pesquisa.
+- Confirmar uma instância de pesquisa que realmente responda em JSON.
+- Implementar consultas "site:drive.google.com".
+- Extrair e normalizar URLs.
+- Deduplicar.
+- Criar o workflow YAML.
+- Gerar o catálogo Drive.
+- Executar uma busca real limitada.
+- Confirmar a persistência do resultado.
+
+Fase 4 — Interface
+
+- Implementar index.html.
+- Implementar style.css.
+- Implementar app.js e módulos necessários.
+- Conectar os dois catálogos.
+- Criar biblioteca IPTV e biblioteca Drive.
+- Implementar pesquisa e navegação.
+- Implementar os estados de disponibilidade.
+
+Fase 5 — Reprodução
+
+- Implementar a camada de player web quando aplicável.
+- Definir a integração Android LibVLC de forma tecnicamente correta.
+- Não declarar LibVLC nativo funcional dentro de uma página web.
+- Fazer a interface selecionar e encaminhar a mídia corretamente ao player compatível.
+
+Fase 6 — Publicação e operação
+
+- Configurar GitHub Pages para a interface.
+- Garantir acesso HTTPS aos catálogos.
+- Garantir que os workflows atualizem somente os seus próprios arquivos.
+- Confirmar as execuções reais e os commits automáticos.
+
+Não substituir a implementação por instruções para o usuário copiar e colar código manualmente.
+
+---
+
+12. DEFINIÇÃO DE CONCLUÍDO
+
+O projeto só poderá ser considerado funcional quando:
+
+1. O motor IPTV fizer uma pesquisa real.
+2. O motor IPTV gerar seu catálogo JSON.
+3. O workflow IPTV atualizar seu catálogo automaticamente.
+4. O motor Drive fizer uma pesquisa real.
+5. O motor Drive gerar seu catálogo JSON.
+6. O workflow Drive atualizar seu catálogo automaticamente.
+7. Os catálogos forem independentes.
+8. A interface carregar os dois catálogos.
+9. A interface permitir pesquisa e navegação nos dois acervos.
+10. O player abrir fontes compatíveis.
+11. A integração Android LibVLC estiver claramente implementada no ambiente nativo, se essa entrega fizer parte deste repositório.
+12. Erros de acesso e reprodução forem informados sem falsos resultados.
+
+Não considerar README, pastas, arquivos vazios ou workflows que apenas iniciam como entrega funcional.
+
+---
+
+13. PRIMEIRA AÇÃO NO NOVO DIÁLOGO
+
+Comece acessando diretamente:
+
+https://github.com/detiillimichel-max/CHANEL-YML-PYTHON-
+
+Faça a inspeção real do conteúdo atual.
+
+Confirme que o repositório correto é CHANEL-YML-PYTHON-.
+
+Confirme a branch "develop" criada para o desenvolvimento e mantenha "main" sem alterações de implementação até que o usuário autorize explicitamente outra estratégia.
+
+Não volte ao MEDEIA-ANDROID para implementar os motores.
+
+Não retome o projeto SearXNG experimental do repositório antigo como se fosse o produto final.
+
+Não peça ao usuário para escolher novamente a arquitetura. O objetivo já está definido.
+
+Não faça uma longa apresentação de possibilidades. Execute a inspeção, apresente a estrutura definitiva e comece a implementação.
+
+MISSÃO: ENTREGAR DOIS MOTORES PYTHON/YAML FUNCIONAIS, DOIS CATÁLOGOS INDEPENDENTES, UMA INTERFACE HTML/CSS/JS E UM CAMINHO DE REPRODUÇÃO TECNICAMENTE CORRETO COM VLC/LIBVLC.
+
+O usuário já passou vários dias tentando chegar a esse resultado. Não desviar do escopo, não inventar funcionalidades e não declarar conclusão sem execução real.
