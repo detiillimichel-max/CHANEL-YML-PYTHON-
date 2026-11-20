@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-19T20:50:04.918050+00:00",
-  "item_count": 208,
+  "updated_at": "2026-11-20T07:31:45.089799+00:00",
+  "item_count": 213,
   "items": [
     {
       "id": "5624fa6f8f3829831665",
@@ -3747,6 +3747,71 @@
       "playback_status": "not_confirmed",
       "source_type": "playlist_entry",
       "http_status": 200
+    },
+    {
+      "id": "2a0585fa4a4b7013a5c6",
+      "name": "freelivesports-tv/playlist.m3u",
+      "source": "https://github.com/sulthanpamenan/IPTV_Master",
+      "playlist_url": "https://raw.githubusercontent.com/sulthanpamenan/IPTV_Master/main/freelivesports-tv/playlist.m3u",
+      "format": "m3u",
+      "discovered_at": "2026-11-20T07:31:43.667002+00:00",
+      "checked_at": "2026-11-20T07:31:43.667002+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "invalid_m3u"
+    },
+    {
+      "id": "02b0dc56ed22cee26ec7",
+      "name": "padang-tv/playlist.m3u",
+      "source": "https://github.com/sulthanpamenan/IPTV_Master",
+      "playlist_url": "https://raw.githubusercontent.com/sulthanpamenan/IPTV_Master/main/padang-tv/playlist.m3u",
+      "format": "m3u",
+      "discovered_at": "2026-11-20T07:31:43.667002+00:00",
+      "checked_at": "2026-11-20T07:31:43.667002+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "invalid_m3u"
+    },
+    {
+      "id": "c334d2cc0c1a8381943e",
+      "name": "playlist.m3u8",
+      "source": "https://github.com/sulthanpamenan/IPTV_Master",
+      "playlist_url": "https://raw.githubusercontent.com/sulthanpamenan/IPTV_Master/main/playlist.m3u8",
+      "format": "m3u8",
+      "discovered_at": "2026-11-20T07:31:43.667002+00:00",
+      "checked_at": "2026-11-20T07:31:43.667002+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "invalid_m3u"
+    },
+    {
+      "id": "8b8b69ce674f868f4398",
+      "name": "pluto-tv/playlist.m3u",
+      "source": "https://github.com/sulthanpamenan/IPTV_Master",
+      "playlist_url": "https://raw.githubusercontent.com/sulthanpamenan/IPTV_Master/main/pluto-tv/playlist.m3u",
+      "format": "m3u",
+      "discovered_at": "2026-11-20T07:31:43.667002+00:00",
+      "checked_at": "2026-11-20T07:31:43.667002+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "invalid_m3u"
+    },
+    {
+      "id": "88a859a97be51441dae8",
+      "name": "vod.m3u8",
+      "source": "https://github.com/sulthanpamenan/IPTV_Master",
+      "playlist_url": "https://raw.githubusercontent.com/sulthanpamenan/IPTV_Master/main/vod.m3u8",
+      "format": "m3u8",
+      "discovered_at": "2026-11-20T07:31:43.667002+00:00",
+      "checked_at": "2026-11-20T07:31:43.667002+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "invalid_m3u"
     }
   ]
 }
