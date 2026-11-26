@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-25T21:50:58.508708+00:00",
-  "item_count": 535,
+  "updated_at": "2026-11-26T08:38:49.840781+00:00",
+  "item_count": 536,
   "items": [
     {
       "id": "5624fa6f8f3829831665",
@@ -9603,6 +9603,19 @@
       "playback_status": "not_confirmed",
       "source_type": "github_repository",
       "validation": "invalid_m3u"
+    },
+    {
+      "id": "b455321e98b0c708ae12",
+      "name": "tenchii playlist.m3u",
+      "source": "https://github.com/tenchiift/iptv",
+      "playlist_url": "https://raw.githubusercontent.com/tenchiift/iptv/main/tenchii playlist.m3u",
+      "format": "m3u",
+      "discovered_at": "2026-11-26T08:38:49.619649+00:00",
+      "checked_at": "2026-11-26T08:38:49.619649+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "valid_m3u"
     }
   ]
 }
