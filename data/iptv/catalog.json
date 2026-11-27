@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-26T21:44:36.781764+00:00",
-  "item_count": 536,
+  "updated_at": "2026-11-27T08:49:48.538849+00:00",
+  "item_count": 537,
   "items": [
     {
       "id": "5624fa6f8f3829831665",
@@ -9616,6 +9616,19 @@
       "playback_status": "not_confirmed",
       "source_type": "github_repository",
       "validation": "valid_m3u"
+    },
+    {
+      "id": "8f634a49b0bd4508acf8",
+      "name": "playlist.m3u",
+      "source": "https://github.com/abusaeeidx/Mrgify-BDIX-IPTV",
+      "playlist_url": "https://raw.githubusercontent.com/abusaeeidx/Mrgify-BDIX-IPTV/main/playlist.m3u",
+      "format": "m3u",
+      "discovered_at": "2026-11-27T08:49:48.398604+00:00",
+      "checked_at": "2026-11-27T08:49:48.398604+00:00",
+      "availability": "accessible",
+      "playback_status": "not_confirmed",
+      "source_type": "github_repository",
+      "validation": "invalid_m3u"
     }
   ]
 }
